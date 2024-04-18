@@ -1,0 +1,13 @@
+.header-link.active {
+    font-family: 'cpb';
+    color: var(--chakra-colors-cyan-300);
+}
+
+.header-link.light.active {
+    color: var(--chakra-colors-blue-500);
+}
+
+.header-link {
+    font-size: 18px;
+    line-height: 26px;
+}
