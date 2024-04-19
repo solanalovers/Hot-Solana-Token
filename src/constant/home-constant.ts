@@ -43,100 +43,127 @@ const tempHomeList = [
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005',
+            desc: 'HUYDHN',
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
     {
         id: 2145,
         token: {
             name: 'Tensiot',
-            desc: '1005'
+            desc: 'HUYDHN'
         },
         symbol: 'HUYDHN',
         address: '9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn',
         total: 2145,
-        dex: 'tensor.trade'
+        reward:{
+            host: 1,
+            token: 5
+        }
     },
 ]
 

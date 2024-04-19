@@ -4,22 +4,41 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import './header.css'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
     const { publicKey } = useWallet()
     const { colorMode } = useColorMode()
     const text = useColorModeValue('light.text', 'dark.text')
     const border = useColorModeValue('light.border', 'dark.border')
+    const pathname = usePathname();
+
+    const navlink = [
+        {
+            label: 'HOME',
+            value: '/'
+        },
+        {
+            label: 'FAQ',
+            value: '/faq'
+        },
+        {
+            label: 'REWARD',
+            value: '/reward'
+        },
+    ]
 
     return (
         <Box borderBottom={`1px solid`} borderColor={border}>
             <Container maxW={'1328px'}>
                 <Flex paddingY={'16px'} alignItems={'center'}>
                     <Flex alignItems={'center'} columnGap={'32px'}>
-                        <Image src={`/image/${colorMode === 'dark' ? 'header-logo.png' : 'header-logo-light.png'}`} width={'48px'} height={'48px'} objectFit={'cover'} />
-                        <Link href={''} className={colorMode === 'dark' ? 'header-link' : 'header-link light'}>HOME</Link>
-                        <Link href={'/faq'} className={colorMode === 'dark' ? 'header-link' : 'header-link light'}>FAQ</Link>
-                        <Link href={'/reward'} className={colorMode === 'dark' ? 'header-link' : 'header-link light'}>REWARD</Link>
+                        <Link href={'/'}>
+                            <Image src={`/image/${colorMode === 'dark' ? 'header-logo.png' : 'header-logo-light.png'}`} width={'48px'} height={'48px'} objectFit={'cover'} />
+                        </Link>
+                        {navlink.map((link: any, idx: number) => (
+                            <Link key={idx} href={link.value} className={`${colorMode === 'dark' ? 'header-link' : 'header-link light'} ${pathname === link.value && 'active'}`}>{link.label}</Link>
+                        ))}
                     </Flex>
                     <Spacer />
                     {!publicKey ?
@@ -31,7 +50,7 @@ export default function Header() {
                             border={`1px solid`}
                             borderColor={text}
                             position={'relative'}
-                            _hover={{opacity: 0.5}}
+                            _hover={{ opacity: 0.5 }}
                             borderRadius={8}
                         >
                             <WalletMultiButton />

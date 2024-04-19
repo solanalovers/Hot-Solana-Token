@@ -7,7 +7,7 @@ import { Box, useColorModeValue } from '@chakra-ui/react'
 export default function DefaultLayout({ children }: any) {
     const bg = useColorModeValue('light.bg', 'dark.bg');
     return (
-        <Box background={bg}>
+        <Box background={bg} minHeight={'100vh'}>
             <Header />
             {children}
             <Footer />
