@@ -6,7 +6,7 @@
   font-family: 'cpel';
   font-style: normal;
   font-weight: normal;
-  src: local('../font/CPMono_v07 ExtraLight'), url('../font/CPMono_v07_ExtraLight.woff') format('woff');
+  src: local('../../font/CPMono_v07 ExtraLight'), url('../../font/CPMono_v07_ExtraLight.woff') format('woff');
 }
 
 
@@ -14,7 +14,7 @@
   font-family: 'cpl';
   font-style: normal;
   font-weight: normal;
-  src: local('../font/CPMono_v07 Light'), url('../font/CPMono_v07_Light.woff') format('woff');
+  src: local('../../font/CPMono_v07 Light'), url('../../font/CPMono_v07_Light.woff') format('woff');
 }
 
 
@@ -22,7 +22,7 @@
   font-family: 'cp';
   font-style: normal;
   font-weight: normal;
-  src: local('../font/CPMono_v07 Plain'), url('../font/CPMono_v07_Plain.woff') format('woff');
+  src: local('../../font/CPMono_v07 Plain'), url('../../font/CPMono_v07_Plain.woff') format('woff');
 }
 
 
@@ -30,7 +30,7 @@
   font-family: 'cpb';
   font-style: normal;
   font-weight: normal;
-  src: local('../font/CPMono_v07 Bold'), url('../font/CPMono_v07_Bold.woff') format('woff');
+  src: local('../../font/CPMono_v07 Bold'), url('../../font/CPMono_v07_Bold.woff') format('woff');
 }
 
 
@@ -38,7 +38,7 @@
   font-family: 'cpblack';
   font-style: normal;
   font-weight: normal;
-  src: local('../font/CPMono_v07 Black'), url('../font/CPMono_v07_Black.woff') format('woff');
+  src: local('../../font/CPMono_v07 Black'), url('../../font/CPMono_v07_Black.woff') format('woff');
 }
 
 .wallet-adapter-dropdown {
