@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Table,
   Thead,
@@ -17,23 +17,23 @@ import {
   useDisclosure,
   Spinner,
   AbsoluteCenter,
-} from "@chakra-ui/react";
-import { tempHomeList } from "../../constant/home-constant";
-import HomeDrawer from "./HomeDrawer";
-import { useEffect, useState } from "react";
-import { getTokensData } from "@/supabase/getTokensData";
+} from '@chakra-ui/react';
+import { tempHomeList } from '../../constant/home-constant';
+import HomeDrawer from './HomeDrawer';
+import { useEffect, useState } from 'react';
+import { getTokensData } from '@/supabase/getTokensData';
 
 export default function HomeTableList({ tokenList, loading }: any) {
   const [selectedToken, setSelectedToken] = useState(null);
-  const border = useColorModeValue("light.border", "dark.border");
-  const text = useColorModeValue("light.text", "dark.text");
+  const border = useColorModeValue('light.border', 'dark.border');
+  const text = useColorModeValue('light.text', 'dark.text');
   const tokenName = useColorModeValue(
-    "var(--chakra-colors-blackAlpha-800)",
-    "white"
+    'var(--chakra-colors-blackAlpha-800)',
+    'white'
   );
   const text2 = useColorModeValue(
-    "var(--chakra-colors-blackAlpha-800)",
-    "gray.200"
+    'var(--chakra-colors-blackAlpha-800)',
+    'gray.200'
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -47,11 +47,8 @@ export default function HomeTableList({ tokenList, loading }: any) {
         data={selectedToken}
       />
       <TableContainer>
-        <Table variant="unstyle">
-          <Thead
-            borderColor={border}
-            borderBottom={"1px solid"}
-          >
+        <Table variant='unstyle'>
+          <Thead borderColor={border} borderBottom={'1px solid'}>
             <Tr>
               <Th>IDs</Th>
               <Th>TOKENS</Th>
@@ -64,8 +61,8 @@ export default function HomeTableList({ tokenList, loading }: any) {
           </Thead>
           <Tbody>
             {loading ? (
-              <Box height={"200px"}>
-                <AbsoluteCenter mt={"30px"}>
+              <Box height={'200px'}>
+                <AbsoluteCenter mt={'30px'}>
                   <Spinner />
                 </AbsoluteCenter>
               </Box>
@@ -77,29 +74,26 @@ export default function HomeTableList({ tokenList, loading }: any) {
                       <Tr key={idx}>
                         <Td>{data?.PairId}</Td>
                         <Td>
-                          <Flex
-                            alignItems={"center"}
-                            columnGap={"8px"}
-                          >
+                          <Flex alignItems={'center'} columnGap={'8px'}>
                             <Image
                               src={`${data?.imageUrl}`}
-                              width={"32px"}
-                              height={"32px"}
-                              objectFit={"cover"}
-                              objectPosition={"center"}
+                              width={'32px'}
+                              height={'32px'}
+                              objectFit={'cover'}
+                              objectPosition={'center'}
                             />
                             <Box>
                               <Text
-                                fontSize={"12px"}
-                                lineHeight={"16px"}
+                                fontSize={'12px'}
+                                lineHeight={'16px'}
                                 color={tokenName}
                               >
                                 {data?.BaseTokenName}
                               </Text>
                               <Text
-                                fontSize={"12px"}
-                                lineHeight={"16px"}
-                                color={"gray.600"}
+                                fontSize={'12px'}
+                                lineHeight={'16px'}
+                                color={'gray.600'}
                               >
                                 {/* {data.token.desc} */}
                               </Text>
@@ -109,7 +103,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                         <Td>
                           <Link
                             color={text}
-                            textDecoration={"underline"}
+                            textDecoration={'underline'}
                             href={`https://solscan.io/address/${data?.BaseTokenAddress}`}
                             isExternal
                           >
@@ -119,19 +113,19 @@ export default function HomeTableList({ tokenList, loading }: any) {
                         </Td>
                         <Td>
                           <Button
-                            backgroundColor={"blue.500"}
-                            paddingX={"8px"}
-                            paddingY={"4px"}
-                            _hover={{ backgrondColor: "unset", opacity: 0.8 }}
+                            backgroundColor={'blue.500'}
+                            paddingX={'8px'}
+                            paddingY={'4px'}
+                            _hover={{ backgrondColor: 'unset', opacity: 0.8 }}
                             onClick={() => {
                               setSelectedToken(data);
                               onOpen();
                             }}
                           >
                             <Text
-                              color={"white"}
-                              fontSize={"12px"}
-                              lineHeight={"16px"}
+                              color={'white'}
+                              fontSize={'12px'}
+                              lineHeight={'16px'}
                             >
                               LIKE
                             </Text>
@@ -142,8 +136,8 @@ export default function HomeTableList({ tokenList, loading }: any) {
                         {data?.reward?.host} HOST PER LIKE
                       </Text> */}
                           <Text
-                            fontSize={"14px"}
-                            lineHeight={"20px"}
+                            fontSize={'14px'}
+                            lineHeight={'20px'}
                             color={text2}
                           >
                             {data?.reward?.token} {data?.BaseTokenSymbol} PER
@@ -152,65 +146,54 @@ export default function HomeTableList({ tokenList, loading }: any) {
                         </Td>
                         <Td>
                           <Text
-                            fontSize={"14px"}
-                            lineHeight={"20px"}
+                            fontSize={'14px'}
+                            lineHeight={'20px'}
                             color={text2}
                           >
-                            {/* {data.total} */}
-                            999
+                            {data?.vote_result && data?.vote_result[0]?.counts
+                              ? `${data?.vote_result[0].counts}`
+                              : '0'}
                           </Text>
                         </Td>
                         <Td>
-                          <Flex
-                            alignItems={"center"}
-                            columnGap={"8px"}
-                          >
+                          <Flex alignItems={'center'} columnGap={'8px'}>
                             <Link
                               href={`https://coinmarketcap.com/en/currencies/${data?.BaseTokenName}`}
                               isExternal
                             >
                               <Image
-                                src="/image/cmc.png"
-                                width={"28px"}
-                                height={"28px"}
-                                objectFit={"cover"}
-                                objectPosition={"center"}
+                                src='/image/cmc.png'
+                                width={'28px'}
+                                height={'28px'}
+                                objectFit={'cover'}
+                                objectPosition={'center'}
                               />
                             </Link>
-                            <Link
-                              href={"https://raydium.io/"}
-                              isExternal
-                            >
+                            <Link href={'https://raydium.io/'} isExternal>
                               <Image
-                                src="/image/raydium.png"
-                                width={"28px"}
-                                height={"28px"}
-                                objectFit={"cover"}
-                                objectPosition={"center"}
+                                src='/image/raydium.png'
+                                width={'28px'}
+                                height={'28px'}
+                                objectFit={'cover'}
+                                objectPosition={'center'}
                               />
                             </Link>
-                            <Link
-                              href={"https://www.orca.so"}
-                              isExternal
-                            >
+                            <Link href={'https://www.orca.so'} isExternal>
                               <Image
-                                src="/image/orca.png"
-                                width={"28px"}
-                                height={"28px"}
-                                objectFit={"cover"}
-                                objectPosition={"center"}
+                                src='/image/orca.png'
+                                width={'28px'}
+                                height={'28px'}
+                                objectFit={'cover'}
+                                objectPosition={'center'}
                               />
                             </Link>
-                            <Link
-                              href={"https://www.meteora.ag/"}
-                              isExternal
-                            >
+                            <Link href={'https://www.meteora.ag/'} isExternal>
                               <Image
-                                src="/image/meteor.png"
-                                width={"28px"}
-                                height={"28px"}
-                                objectFit={"cover"}
-                                objectPosition={"center"}
+                                src='/image/meteor.png'
+                                width={'28px'}
+                                height={'28px'}
+                                objectFit={'cover'}
+                                objectPosition={'center'}
                               />
                             </Link>
                             <Link
@@ -218,11 +201,11 @@ export default function HomeTableList({ tokenList, loading }: any) {
                               isExternal
                             >
                               <Image
-                                src="/image/birdeye.png"
-                                width={"28px"}
-                                height={"28px"}
-                                objectFit={"cover"}
-                                objectPosition={"center"}
+                                src='/image/birdeye.png'
+                                width={'28px'}
+                                height={'28px'}
+                                objectFit={'cover'}
+                                objectPosition={'center'}
                               />
                             </Link>
                             <Link
@@ -230,11 +213,11 @@ export default function HomeTableList({ tokenList, loading }: any) {
                               isExternal
                             >
                               <Image
-                                src="/image/dex-screener.png"
-                                width={"28px"}
-                                height={"28px"}
-                                objectFit={"cover"}
-                                objectPosition={"center"}
+                                src='/image/dex-screener.png'
+                                width={'28px'}
+                                height={'28px'}
+                                objectFit={'cover'}
+                                objectPosition={'center'}
                               />
                             </Link>
                           </Flex>
