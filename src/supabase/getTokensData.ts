@@ -1,8 +1,13 @@
 import { supabase } from '@/function/supabaseClients';
 
-export const getTokensData = async () => {
+export const getTokensData = async (page: number) => {
   try {
-    const { data, error } = await supabase.from('token').select('*').limit(9);
+    const offset = page === 1 ? 0 : (page - 1) * 100;
+    const { data, count, error } = await supabase
+      .from('token')
+      .select('*', { count: 'exact' })
+      .range(offset, offset + 99)
+      .order('PairId');
     if (error) {
       throw error;
     }
@@ -10,7 +15,7 @@ export const getTokensData = async () => {
     if (data && data.length > 0) {
       console.log(data);
 
-      return data;
+      return { data, count };
     }
   } catch (error) {
     console.log(error);

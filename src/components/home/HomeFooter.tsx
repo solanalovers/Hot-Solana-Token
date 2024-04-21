@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { TriangleUpIcon } from "@chakra-ui/icons";
 
-export default function HomeFooter() {
+export default function HomeFooter({ page, setPage, total }: any) {
   const { colorMode, toggleColorMode } = useColorMode();
   const text = useColorModeValue("light.text", "dark.text");
   const border = useColorModeValue("black", "white");
@@ -63,7 +63,8 @@ export default function HomeFooter() {
           fontSize={"14px"}
           lineHeight={"16px"}
         >
-          Showing pairs 101-200 of 21,219
+          Showing pairs {page === 1 ? 1 : 100 * (page - 1) + 1}-{100 * page} of{" "}
+          {total}
         </Text>
         <Flex
           alignItems={"center"}
@@ -75,6 +76,8 @@ export default function HomeFooter() {
             borderColor={border}
             paddingY={"10px"}
             paddingX={"24px"}
+            disabled={page === 1}
+            onClick={() => page !== 1 && setPage(page - 1)}
           >
             <Flex
               alignItems={"center"}
@@ -85,7 +88,7 @@ export default function HomeFooter() {
                 fontSize={"12px"}
                 lineHeight={"20px"}
               >
-                Pairs 1-100
+                Pairs {page !== 1 ? (page - 1) * 100 + 1 : 1}-{100 * page}
               </Text>
             </Flex>
           </Button>
@@ -95,6 +98,7 @@ export default function HomeFooter() {
             borderColor={border}
             paddingY={"10px"}
             paddingX={"24px"}
+            onClick={() => setPage(page + 1)}
           >
             <Flex
               alignItems={"center"}
@@ -105,7 +109,7 @@ export default function HomeFooter() {
                 fontSize={"12px"}
                 lineHeight={"20px"}
               >
-                Pairs 201-300
+                Pairs {100 * page + 1}-{100 * (page + 1)}
               </Text>
             </Flex>
           </Button>

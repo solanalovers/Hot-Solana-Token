@@ -1,15 +1,10 @@
 "use client";
-import { supabase } from "@/function/supabaseClients";
 import { getTokensData } from "@/supabase/getTokensData";
 import {
   Drawer,
   DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
   useColorModeValue,
   Flex,
   Image,
@@ -19,7 +14,6 @@ import {
   InputRightAddon,
   Input,
   Link,
-  InputAddon,
   Box,
 } from "@chakra-ui/react";
 import React from "react";
