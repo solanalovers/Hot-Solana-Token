@@ -307,8 +307,8 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
                 LIKE FOR {data?.BaseTokenSymbol}
               </Button>
               <Text color={text} fontSize={'16px'} lineHeight={'24px'}>
-                A node is a computer that connects to a cryptocurrency network.
-                The node supports the cryptocurrency's network through either
+                A node is a computer that connects to a cryptocurrency network.
+                The node supports the cryptocurrency&apos;s network through either
                 relaying transactions, validation, or hosting a copy of the
                 blockchain. In terms of relaying transactions, each network
                 computer (node) has a copy of the blockchain of the
