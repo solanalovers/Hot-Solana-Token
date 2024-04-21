@@ -192,10 +192,10 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
                 color={"white"}
                 _hover={{ backgroundColor: "blue.500", opacity: 0.8 }}
                 onClick={async () => {
-                  getTokensData();
+                  // getTokensData();
                 }}
               >
-                LIKE FOR DAI
+                LIKE FOR {data?.BaseTokenName}
               </Button>
               <Text
                 color={text}
