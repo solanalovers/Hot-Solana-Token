@@ -5,9 +5,10 @@ export const getTokensData = async (page: number) => {
     const offset = page === 1 ? 0 : (page - 1) * 100;
     const { data, count, error } = await supabase
       .from('token')
-      .select('*', { count: 'exact' })
+      .select('*, vote_result(counts)', { count: 'exact' })
       .range(offset, offset + 99)
       .order('PairId');
+
     if (error) {
       throw error;
     }
