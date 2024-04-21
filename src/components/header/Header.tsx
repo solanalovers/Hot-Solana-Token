@@ -5,6 +5,11 @@ import {
   Container,
   Flex,
   Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Select,
   Spacer,
   Text,
   useColorMode,
@@ -16,6 +21,7 @@ import "./header.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLocale } from "next-intl";
+import LocaleSelect from "./localeComponent/LocaleSelect";
 
 export default function Header() {
   const { publicKey } = useWallet();
@@ -79,39 +85,45 @@ export default function Header() {
             ))}
           </Flex>
           <Spacer />
-          {!publicKey ? (
-            <Box
-              height={"40px"}
-              paddingY={"8px"}
-              paddingX={"26px"}
-              backgroundColor={"blue.500"}
-              border={`1px solid`}
-              borderColor={text}
-              position={"relative"}
-              _hover={{ opacity: 0.5 }}
-              borderRadius={8}
-            >
-              <WalletMultiButton />
-              <Text
-                fontFamily={"heading"}
-                fontSize={"16px"}
-                lineHeight={"24px"}
-                fontWeight={"500"}
-                color={"white"}
+          <Flex
+            alignItems={"center"}
+            columnGap={"16px"}
+          >
+            <LocaleSelect />
+            {!publicKey ? (
+              <Box
+                height={"40px"}
+                paddingY={"8px"}
+                paddingX={"26px"}
+                backgroundColor={"blue.500"}
+                border={`1px solid`}
+                borderColor={text}
+                position={"relative"}
+                _hover={{ opacity: 0.5 }}
+                borderRadius={8}
               >
-                Connect wallet
+                <WalletMultiButton />
+                <Text
+                  fontFamily={"heading"}
+                  fontSize={"16px"}
+                  lineHeight={"24px"}
+                  fontWeight={"500"}
+                  color={"white"}
+                >
+                  Connect wallet
+                </Text>
+              </Box>
+            ) : (
+              <Text
+                width={200}
+                textOverflow={"ellipsis"}
+                overflow={"hidden"}
+                whiteSpace={"nowrap"}
+              >
+                {JSON.stringify(publicKey)}
               </Text>
-            </Box>
-          ) : (
-            <Text
-              width={200}
-              textOverflow={"ellipsis"}
-              overflow={"hidden"}
-              whiteSpace={"nowrap"}
-            >
-              {JSON.stringify(publicKey)}
-            </Text>
-          )}
+            )}
+          </Flex>
         </Flex>
       </Container>
     </Box>
