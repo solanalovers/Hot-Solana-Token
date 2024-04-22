@@ -255,6 +255,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                             {data?.typesocials_Pair && (
                               <Link
                                 href={data?.urlsocials_Pair}
+                                _hover={{ opacity: 0.8 }}
                                 isExternal
                               >
                                 <Image
@@ -268,6 +269,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                               <Link
                                 href={data?.urlsocials}
                                 isExternal
+                                _hover={{ opacity: 0.8 }}
                               >
                                 <Image
                                   src={`/image/social/${data?.typesocials}.png`}
@@ -280,6 +282,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                               <Link
                                 href={data?.urlweb}
                                 isExternal
+                                _hover={{ opacity: 0.8 }}
                               >
                                 <Image
                                   src="/image/social/web.png"
@@ -291,6 +294,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                             <Link
                               href={`https://dexscreener.com/solana/${data?.BaseTokenAddress}`}
                               isExternal
+                              _hover={{ opacity: 0.8 }}
                             >
                               <Image
                                 src="/image/dex-screener.png"
@@ -303,6 +307,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                             <Link
                               href={`https://raydium.io/swap/?inputCurrency=sol&outputCurrency=${data?.BaseTokenAddress}`}
                               isExternal
+                              _hover={{ opacity: 0.8 }}
                             >
                               <Image
                                 src="/image/raydium.png"
@@ -316,6 +321,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                             <Link
                               href={`https://jup.ag/swap/SOL-${data?.BaseTokenAddress}`}
                               isExternal
+                              _hover={{ opacity: 0.8 }}
                             >
                               <Image
                                 src="/image/jup.png"
