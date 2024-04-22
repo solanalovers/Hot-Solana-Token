@@ -68,7 +68,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                 <Td />
                 <Td />
                 <Td />
-                <Td paddingTop={'32px'}>
+                <Td paddingTop={"32px"}>
                   <Spinner />
                 </Td>
                 <Td />
@@ -87,13 +87,15 @@ export default function HomeTableList({ tokenList, loading }: any) {
                             alignItems={"center"}
                             columnGap={"8px"}
                           >
-                            <Image
-                              src={`${data?.imageUrl}`}
-                              width={"32px"}
-                              height={"32px"}
-                              objectFit={"cover"}
-                              objectPosition={"center"}
-                            />
+                            {data?.imageUrl && (
+                              <Image
+                                src={`${data?.imageUrl}`}
+                                width={"32px"}
+                                height={"32px"}
+                                objectFit={"cover"}
+                                objectPosition={"center"}
+                              />
+                            )}
                             <Box>
                               <Text
                                 fontSize={"12px"}
@@ -107,7 +109,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                                 lineHeight={"16px"}
                                 color={"gray.600"}
                               >
-                                {/* {data.token.desc} */}
+                                {data?.BaseTokenSymbol}
                               </Text>
                             </Box>
                           </Flex>
@@ -168,7 +170,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                           </Text>
                         </Td>
                         <Td>
-                          <Flex
+                          {/* <Flex
                             alignItems={"center"}
                             columnGap={"8px"}
                           >
@@ -240,6 +242,92 @@ export default function HomeTableList({ tokenList, loading }: any) {
                                 src="/image/dex-screener.png"
                                 width={"28px"}
                                 height={"28px"}
+                                objectFit={"cover"}
+                                objectPosition={"center"}
+                              />
+                            </Link>
+                          </Flex> */}
+                          <Flex
+                            marginTop={"8px"}
+                            alignItems={"center"}
+                            columnGap={"12px"}
+                          >
+                            {data?.typesocials_Pair && (
+                              <Link
+                                href={data?.urlsocials_Pair}
+                                _hover={{ opacity: 0.8 }}
+                                isExternal
+                              >
+                                <Image
+                                  src={`/image/social/${data?.typesocials_Pair}.png`}
+                                  width={"32px"}
+                                  height={"32px"}
+                                />
+                              </Link>
+                            )}
+                            {data?.typesocials && (
+                              <Link
+                                href={data?.urlsocials}
+                                isExternal
+                                _hover={{ opacity: 0.8 }}
+                              >
+                                <Image
+                                  src={`/image/social/${data?.typesocials}.png`}
+                                  width={"32px"}
+                                  height={"32px"}
+                                />
+                              </Link>
+                            )}
+                            {data?.urlweb && (
+                              <Link
+                                href={data?.urlweb}
+                                isExternal
+                                _hover={{ opacity: 0.8 }}
+                              >
+                                <Image
+                                  src="/image/social/web.png"
+                                  width={"32px"}
+                                  height={"32px"}
+                                />
+                              </Link>
+                            )}
+                            <Link
+                              href={`https://dexscreener.com/solana/${data?.BaseTokenAddress}`}
+                              isExternal
+                              _hover={{ opacity: 0.8 }}
+                            >
+                              <Image
+                                src="/image/dex-screener.png"
+                                width={"28px"}
+                                height={"28px"}
+                                objectFit={"cover"}
+                                objectPosition={"center"}
+                              />
+                            </Link>
+                            <Link
+                              href={`https://raydium.io/swap/?inputCurrency=sol&outputCurrency=${data?.BaseTokenAddress}`}
+                              isExternal
+                              _hover={{ opacity: 0.8 }}
+                            >
+                              <Image
+                                src="/image/raydium.png"
+                                width={"28px"}
+                                height={"28px"}
+                                background={"#151142"}
+                                objectFit={"cover"}
+                                objectPosition={"center"}
+                              />
+                            </Link>
+                            <Link
+                              href={`https://jup.ag/swap/SOL-${data?.BaseTokenAddress}`}
+                              isExternal
+                              _hover={{ opacity: 0.8 }}
+                            >
+                              <Image
+                                src="/image/jup.png"
+                                width={"28px"}
+                                height={"28px"}
+                                background={"#0F1524"}
                                 objectFit={"cover"}
                                 objectPosition={"center"}
                               />

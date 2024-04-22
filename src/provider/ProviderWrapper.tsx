@@ -1,20 +1,18 @@
-'use client';
+"use client";
 
-import { ChakraProvider } from '@chakra-ui/react';
-import WalletAdapter from './WalletAdapter';
-import theme from '@/config/Theme';
-import { createContext, useState } from 'react';
-export const AppContext = createContext<any>({});
+import { ChakraProvider } from "@chakra-ui/react";
+import WalletAdapter from "./WalletAdapter";
+import theme from "@/config/Theme";
+import { createContext, useState } from "react";
+import AppAdapter from "./AppAdapter";
 
 export function ProviderWrapper({ children }: { children: React.ReactNode }) {
-  const [isMainnet, setIsMainnet] = useState(true);
-
   return (
     <WalletAdapter>
       <ChakraProvider theme={theme}>
-        <AppContext.Provider value={{ isMainnet, setIsMainnet }}>
+        <AppAdapter>
           {children}
-        </AppContext.Provider>
+        </AppAdapter>
       </ChakraProvider>
     </WalletAdapter>
   );

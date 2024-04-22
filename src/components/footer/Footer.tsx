@@ -43,7 +43,7 @@ export default function Footer() {
             textDecor={'underline'}
             color={text}
           >
-            9RFFhhe4XPV8UcBFJkgrDwGGtN3jmktBtw4RBia1bBVn
+            8KjLx7XNw8Wfc2mFAGpz8pngDX9YyQmoze61bi1dGzoa
           </Text>
         </Flex>
       </Flex>
