@@ -54,6 +54,7 @@ export default function ConnectedWallet({ address }: { address: string }) {
         height={"24px"}
         _hover={{ opacity: 0.5 }}
         onClick={disconnect}
+        cursor={'pointer'}
       />
     </Flex>
   );

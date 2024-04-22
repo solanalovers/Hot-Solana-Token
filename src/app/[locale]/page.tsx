@@ -3,7 +3,7 @@ import HomeFilter from "@/components/home/HomeFilter";
 import HomeFooter from "@/components/home/HomeFooter";
 import HomeHeading from "@/components/home/HomeHeading";
 import HomeTableList from "@/components/home/HomeTableList";
-import { getTokensData } from "@/supabase/getTokensData";
+import { findOneTokenData, getTokensData } from "@/supabase/getTokensData";
 import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 // import HomeHeading from '../components/home/HomeHeading'
 // import HomeFilter from '../components/home/HomeFilter'
@@ -24,18 +24,30 @@ export default function Home() {
   });
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const { data: tokenList, count }: any = await getTokensData(page, filter);
-      if (tokenList) {
-        setTokenList(tokenList);
-        setTotal(filter.top ? filter.top : count);
-        setTotalPage(filter.top ? 1 : Math.floor(count / 100));
-      }
-      setLoading(false);
-    })();
-    4;
+    getTokenList();
   }, [page, filter]);
+
+  const getTokenList = async () => {
+    setLoading(true);
+    const { data: tokenList, count }: any = await getTokensData(page, filter);
+    if (tokenList) {
+      setTokenList(tokenList);
+      setTotal(filter.top ? filter.top : count);
+      setTotalPage(filter.top ? 1 : Math.floor(count / 100));
+    }
+    setLoading(false);
+  };
+
+  const handleSearch = async (searchValue: string) => {
+    setLoading(true);
+    const { data: tokenList, count }: any = await findOneTokenData(searchValue);
+    if (tokenList) {
+      setTokenList(tokenList);
+      setTotal(1);
+      setTotalPage(1);
+    }
+    setLoading(false);
+  };
 
   return (
     <Box>
@@ -53,6 +65,8 @@ export default function Home() {
               setFilter((prev: any) => ({ ...prev, [type]: value }));
             }
           }}
+          handleSearch={handleSearch}
+          getTokenList={getTokenList}
         />
         <HomeTableList
           tokenList={tokenList}

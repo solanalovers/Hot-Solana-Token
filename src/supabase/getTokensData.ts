@@ -1,6 +1,6 @@
 import { supabase } from '@/function/supabaseClients';
 
-export const getTokensData = async (page: number, filter: { top: string, time: string }) => {
+const getTokensData = async (page: number, filter: { top: string, time: string }) => {
   try {
     const offset = page === 1 ? 0 : (page - 1) * 100;
     let _result: Array<any> = [];
@@ -50,3 +50,28 @@ export const getTokensData = async (page: number, filter: { top: string, time: s
     return [];
   }
 };
+
+const findOneTokenData = async (searchValue: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('token')
+      .select('*, vote_result(counts)', { count: 'exact' })
+      .or(typeof searchValue === 'number' ? `PairId.eq.${searchValue}` : `BaseTokenAddress.eq.${searchValue},BaseTokenName.eq.${searchValue},BaseTokenSymbol.eq.${searchValue}`);
+
+
+    if (error) {
+      throw error;
+    }
+
+    if (data) {
+      console.log(data);
+
+      return { data, count: data?.length };
+    }
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export { getTokensData, findOneTokenData }

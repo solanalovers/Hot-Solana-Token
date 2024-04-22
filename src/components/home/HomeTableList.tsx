@@ -300,6 +300,32 @@ export default function HomeTableList({ tokenList, loading }: any) {
                                 objectPosition={"center"}
                               />
                             </Link>
+                            <Link
+                              href={`https://raydium.io/swap/?inputCurrency=sol&outputCurrency=${data?.BaseTokenAddress}`}
+                              isExternal
+                            >
+                              <Image
+                                src="/image/raydium.png"
+                                width={"28px"}
+                                height={"28px"}
+                                background={"#151142"}
+                                objectFit={"cover"}
+                                objectPosition={"center"}
+                              />
+                            </Link>
+                            <Link
+                              href={`https://jup.ag/swap/SOL-${data?.BaseTokenAddress}`}
+                              isExternal
+                            >
+                              <Image
+                                src="/image/jup.png"
+                                width={"28px"}
+                                height={"28px"}
+                                background={"#0F1524"}
+                                objectFit={"cover"}
+                                objectPosition={"center"}
+                              />
+                            </Link>
                           </Flex>
                         </Td>
                       </Tr>

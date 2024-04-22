@@ -4,7 +4,12 @@ import FilterSelect from "./filter/FilterSelect";
 import { timeFilter, topFilter } from "../../constant/home-constant";
 import SearchBox from "./filter/SearchBox";
 
-export default function HomeFilter({ filter, handleChangeFilter }: any) {
+export default function HomeFilter({
+  filter,
+  handleChangeFilter,
+  getTokenList,
+  handleSearch,
+}: any) {
   const text = useColorModeValue("light.text", "dark.text");
 
   return (
@@ -27,7 +32,10 @@ export default function HomeFilter({ filter, handleChangeFilter }: any) {
         filterList={topFilter}
         handleChangeFilter={(value: string) => handleChangeFilter(value, "top")}
       />
-      <SearchBox />
+      <SearchBox
+        handleSearch={handleSearch}
+        getTokenList={getTokenList}
+      />
     </Flex>
   );
 }
