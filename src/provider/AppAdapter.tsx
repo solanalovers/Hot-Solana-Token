@@ -35,7 +35,7 @@ export default function AppAdapter({
     (async () => {
       await getWalletBalance();
     })();
-  }, [publicKey]);
+  }, [publicKey, isMainnet]);
   return (
     <AppContext.Provider
       value={{ isMainnet, setIsMainnet, balance, getWalletBalance }}

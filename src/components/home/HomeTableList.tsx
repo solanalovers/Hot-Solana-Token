@@ -154,8 +154,7 @@ export default function HomeTableList({ tokenList, loading }: any) {
                             lineHeight={"20px"}
                             color={text2}
                           >
-                            {data?.reward?.token} {data?.BaseTokenSymbol} PER
-                            LIKE
+                            1 HOTST PER LIKE
                           </Text>
                         </Td>
                         <Td>
