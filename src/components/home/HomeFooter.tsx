@@ -18,7 +18,12 @@ interface HomeFooter {
   setPage: (page: number) => void;
 }
 
-export default function HomeFooter({ page, setPage, total, totalPage }: HomeFooter) {
+export default function HomeFooter({
+  page,
+  setPage,
+  total,
+  totalPage,
+}: HomeFooter) {
   const { colorMode, toggleColorMode } = useColorMode();
   const text = useColorModeValue("light.text", "dark.text");
   const border = useColorModeValue("black", "white");
@@ -70,8 +75,8 @@ export default function HomeFooter({ page, setPage, total, totalPage }: HomeFoot
           fontSize={"14px"}
           lineHeight={"16px"}
         >
-          Showing pairs {page === 1 ? 1 : 100 * (page - 1) + 1}-{100 * page} of{" "}
-          {total}
+          Showing pairs {page === 1 ? 1 : 100 * (page - 1) + 1}-
+          {total > 100 * page ? 100 * page : total} of {total}
         </Text>
         <Flex
           alignItems={"center"}
@@ -105,6 +110,7 @@ export default function HomeFooter({ page, setPage, total, totalPage }: HomeFoot
             borderColor={border}
             paddingY={"10px"}
             paddingX={"24px"}
+            isDisabled={page === totalPage}
             onClick={() => page !== totalPage && setPage(page + 1)}
           >
             <Flex

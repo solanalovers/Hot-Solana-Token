@@ -1,3 +1,4 @@
+"use client";
 import { localeList } from "@/constant/localeItemConstant";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import {
@@ -33,6 +34,7 @@ export default function LocaleSelect() {
             height={"16px"}
           />
         }
+        backgroundColor={"transparent"}
       >
         <Flex
           alignItems={"center"}

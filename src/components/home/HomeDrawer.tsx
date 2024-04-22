@@ -1,5 +1,4 @@
 'use client';
-import { AppContext } from '@/provider/ProviderWrapper';
 import { getRandomWallet } from '@/supabase/getRandomWallet';
 import { getTokensData } from '@/supabase/getTokensData';
 import {
@@ -42,6 +41,7 @@ import {
   getMint,
 } from '@solana/spl-token';
 import { supabase } from '@/function/supabaseClients';
+import { AppContext } from '@/provider/AppAdapter';
 
 function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
   const { publicKey, signAllTransactions } = useWallet();

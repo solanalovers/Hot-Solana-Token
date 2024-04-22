@@ -20,22 +20,22 @@ export default function Home() {
   const [totalPage, setTotalPage] = useState<number>(0);
   const [filter, setFilter] = useState({
     time: "1h",
-    top: "100",
+    top: "",
   });
 
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const { data: tokenList, count }: any = await getTokensData(page);
+      const { data: tokenList, count }: any = await getTokensData(page, filter);
       if (tokenList) {
-        setTotalPage(Math.floor(count / 100));
-        setTotal(count);
         setTokenList(tokenList);
+        setTotal(filter.top ? filter.top : count);
+        setTotalPage(filter.top ? 1 : Math.floor(count / 100));
       }
       setLoading(false);
     })();
     4;
-  }, [page]);
+  }, [page, filter]);
 
   return (
     <Box>
@@ -46,9 +46,13 @@ export default function Home() {
         <HomeHeading />
         <HomeFilter
           filter={filter}
-          handleChangeFilter={(value: string, type: string) =>
-            setFilter((prev: any) => ({ ...prev, [type]: value }))
-          }
+          handleChangeFilter={(value: string, type: "top" | "time") => {
+            if (value === filter[type]) {
+              setFilter((prev: any) => ({ ...prev, [type]: "" }));
+            } else {
+              setFilter((prev: any) => ({ ...prev, [type]: value }));
+            }
+          }}
         />
         <HomeTableList
           tokenList={tokenList}
