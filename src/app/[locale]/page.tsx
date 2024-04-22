@@ -17,6 +17,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [filter, setFilter] = useState({
     time: "1h",
     top: "100",
@@ -27,11 +28,13 @@ export default function Home() {
       setLoading(true);
       const { data: tokenList, count }: any = await getTokensData(page);
       if (tokenList) {
+        setTotalPage(Math.floor(count / 100));
         setTotal(count);
         setTokenList(tokenList);
       }
       setLoading(false);
     })();
+    4;
   }, [page]);
 
   return (
@@ -59,6 +62,7 @@ export default function Home() {
         <Container maxW={"1328px"}>
           <HomeFooter
             total={total}
+            totalPage={totalPage}
             setPage={setPage}
             page={page}
           />

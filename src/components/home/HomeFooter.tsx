@@ -11,7 +11,14 @@ import {
 import React from "react";
 import { TriangleUpIcon } from "@chakra-ui/icons";
 
-export default function HomeFooter({ page, setPage, total }: any) {
+interface HomeFooter {
+  page: number;
+  total: number;
+  totalPage: number;
+  setPage: (page: number) => void;
+}
+
+export default function HomeFooter({ page, setPage, total, totalPage }: HomeFooter) {
   const { colorMode, toggleColorMode } = useColorMode();
   const text = useColorModeValue("light.text", "dark.text");
   const border = useColorModeValue("black", "white");
@@ -76,7 +83,7 @@ export default function HomeFooter({ page, setPage, total }: any) {
             borderColor={border}
             paddingY={"10px"}
             paddingX={"24px"}
-            disabled={page === 1}
+            isDisabled={page === 1}
             onClick={() => page !== 1 && setPage(page - 1)}
           >
             <Flex
@@ -98,7 +105,7 @@ export default function HomeFooter({ page, setPage, total }: any) {
             borderColor={border}
             paddingY={"10px"}
             paddingX={"24px"}
-            onClick={() => setPage(page + 1)}
+            onClick={() => page !== totalPage && setPage(page + 1)}
           >
             <Flex
               alignItems={"center"}
