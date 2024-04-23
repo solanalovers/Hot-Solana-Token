@@ -1,6 +1,5 @@
 'use client';
 import { getRandomWallet } from '@/supabase/getRandomWallet';
-import { getTokensData } from '@/supabase/getTokensData';
 import {
   Drawer,
   DrawerBody,
@@ -16,33 +15,26 @@ import {
   Input,
   Link,
   Box,
+  Tooltip,
 } from '@chakra-ui/react';
-import {
-  Connection,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from '@solana/web3.js';
-import React, { useContext, useState } from 'react';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
+import React, { useContext, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Program } from '@coral-xyz/anchor';
-import { IDL, VoteToken } from '@/idl';
+import {
+  createAssociatedTokenAccountInstruction,
+  createTransferCheckedInstruction,
+  getAssociatedTokenAddressSync,
+  getMint,
+  getAccount,
+} from '@solana/spl-token';
+import { AppContext } from '@/provider/AppAdapter';
+import { vote } from '@/function/vote';
 
 interface HomeDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   data: any;
 }
-
-import {
-  createAssociatedTokenAccountInstruction,
-  createTransferCheckedInstruction,
-  getAssociatedTokenAddressSync,
-  getMint,
-} from '@solana/spl-token';
-import { supabase } from '@/function/supabaseClients';
-import { AppContext } from '@/provider/AppAdapter';
-import { vote } from '@/function/vote';
 
 function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
   const { publicKey, signAllTransactions } = useWallet();
@@ -54,21 +46,63 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
   );
   const text2 = useColorModeValue('light.text', 'dark.text');
   const { isMainnet } = useContext(AppContext);
-  const [mintAddress, setMintAddress] = useState('');
+  const [mintAddress, setMintAddress] = useState(
+    '8P8rSfV6uYkkPwxwPTYXBsvea2ZntzZ1c6M3Y2hwKJ7U'
+  );
   const [amount, setAmount] = useState('0');
   const [numberOfLike, setNumberOfLike] = useState('0');
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('Need connect wallet to vote');
+
+  const connection = new Connection(
+    isMainnet
+      ? process.env.NEXT_PUBLIC_HELIUS_RPC_MAINNET!
+      : process.env.NEXT_PUBLIC_HELIUS_RPC_DEVNET!
+  );
+  const handleMouseEnter = () => {
+    if (disabled) {
+      setIsTooltipOpen(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsTooltipOpen(false);
+  };
+
+  const handleDisable = async () => {
+    if (!publicKey) {
+      setDisabled(true);
+    } else {
+      try {
+        console.log('Haha');
+        
+        const mint = new PublicKey(
+          isMainnet
+            ? '8P8rSfV6uYkkPwxwPTYXBsvea2ZntzZ1c6M3Y2hwKJ7U'
+            : mintAddress
+        );
+        const fromAta = getAssociatedTokenAddressSync(mint, publicKey);
+        const a = await getAccount(connection, fromAta);
+        console.log(a);
+      } catch {
+        setDisabled(true);
+        setErrorMsg('You need to have this token to vote');
+      }
+
+      setDisabled(false);
+    }
+  };
+
+  useEffect(() => {
+    handleDisable();
+  }, [publicKey]);
 
   const voteToken = async () => {
     setLoading(true);
     try {
-      if (publicKey) {
-        const connection = new Connection(
-          isMainnet
-            ? process.env.NEXT_PUBLIC_HELIUS_RPC_MAINNET!
-            : process.env.NEXT_PUBLIC_HELIUS_RPC_DEVNET!
-        );
-
+      if (publicKey && !disabled) {
         const mint = new PublicKey(
           isMainnet ? data?.BaseTokenAddress : mintAddress
         );
@@ -267,18 +301,28 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
                   <Image src='/image/thumbup.svg' />
                 </InputRightAddon>
               </InputGroup>
-              <Button
-                backgroundColor={'blue.500'}
-                color={'white'}
-                _hover={{ backgroundColor: 'blue.500', opacity: 0.8 }}
-                onClick={async () => {
-                  console.log('Vote Token');
-                  await voteToken();
-                }}
-                isLoading={loading}
+              <Tooltip
+                label={errorMsg}
+                isOpen={isTooltipOpen}
+                placement='bottom'
               >
-                LIKE FOR {data?.BaseTokenSymbol}
-              </Button>
+                <Button
+                  backgroundColor={'blue.500'}
+                  color={'white'}
+                  _disabled={{ opacity: 0.6, cursor: 'not-allowed' }}
+                  _hover={{ backgroundColor: 'blue.500', opacity: 0.8 }}
+                  onClick={async () => {
+                    await voteToken();
+                  }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  isLoading={loading}
+                  disabled={disabled}
+                >
+                  LIKE FOR {data?.BaseTokenSymbol}
+                </Button>
+              </Tooltip>
+
               <Text color={text} fontSize={'16px'} lineHeight={'24px'}>
                 To LIKE a token, you must have this token in your wallet.
               </Text>
