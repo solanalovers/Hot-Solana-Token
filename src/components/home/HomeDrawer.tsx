@@ -1,5 +1,5 @@
-'use client';
-import { getRandomWallet } from '@/supabase/getRandomWallet';
+"use client";
+import { getRandomWallet } from "@/supabase/getRandomWallet";
 import {
   Drawer,
   DrawerBody,
@@ -16,19 +16,20 @@ import {
   Link,
   Box,
   Tooltip,
-} from '@chakra-ui/react';
-import { Connection, PublicKey, Transaction } from '@solana/web3.js';
-import React, { useContext, useEffect, useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+  useToast,
+} from "@chakra-ui/react";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
+import React, { useContext, useEffect, useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import {
   createAssociatedTokenAccountInstruction,
   createTransferCheckedInstruction,
   getAssociatedTokenAddressSync,
   getMint,
   getAccount,
-} from '@solana/spl-token';
-import { AppContext } from '@/provider/AppAdapter';
-import { vote } from '@/function/vote';
+} from "@solana/spl-token";
+import { AppContext } from "@/provider/AppAdapter";
+import { vote } from "@/function/vote";
 
 interface HomeDrawerProps {
   isOpen: boolean;
@@ -37,24 +38,25 @@ interface HomeDrawerProps {
 }
 
 function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
+  const toast = useToast();
   const { publicKey, signAllTransactions } = useWallet();
-  const bg = useColorModeValue('light.bg', 'dark.bg');
-  const border = useColorModeValue('light.border', 'dark.border');
+  const bg = useColorModeValue("light.bg", "dark.bg");
+  const border = useColorModeValue("light.border", "dark.border");
   const text = useColorModeValue(
-    'var(--chakra-colors-blackAlpha-500)',
-    'gray.200'
+    "var(--chakra-colors-blackAlpha-500)",
+    "gray.200"
   );
-  const text2 = useColorModeValue('light.text', 'dark.text');
+  const text2 = useColorModeValue("light.text", "dark.text");
   const { isMainnet } = useContext(AppContext);
   const [mintAddress, setMintAddress] = useState(
-    '8P8rSfV6uYkkPwxwPTYXBsvea2ZntzZ1c6M3Y2hwKJ7U'
+    "8P8rSfV6uYkkPwxwPTYXBsvea2ZntzZ1c6M3Y2hwKJ7U"
   );
-  const [amount, setAmount] = useState('0');
-  const [numberOfLike, setNumberOfLike] = useState('0');
+  const [amount, setAmount] = useState("");
+  const [numberOfLike, setNumberOfLike] = useState("");
   const [loading, setLoading] = useState(false);
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('Need connect wallet to vote');
+  const [errorMsg, setErrorMsg] = useState("Need connect wallet to vote");
 
   const connection = new Connection(
     isMainnet
@@ -74,30 +76,29 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
   const handleDisable = async () => {
     if (!publicKey) {
       setDisabled(true);
+      return;
     } else {
       try {
-        console.log('Haha');
-        
+        console.log("Haha");
+
         const mint = new PublicKey(
-          isMainnet
-            ? '8P8rSfV6uYkkPwxwPTYXBsvea2ZntzZ1c6M3Y2hwKJ7U'
-            : mintAddress
+          isMainnet ? data?.BaseTokenAddress : mintAddress
         );
         const fromAta = getAssociatedTokenAddressSync(mint, publicKey);
         const a = await getAccount(connection, fromAta);
         console.log(a);
       } catch {
         setDisabled(true);
-        setErrorMsg('You need to have this token to vote');
+        setErrorMsg("You need to have this token to vote");
+        return;
       }
-
       setDisabled(false);
     }
   };
 
   useEffect(() => {
     handleDisable();
-  }, [publicKey]);
+  }, [publicKey, mintAddress]);
 
   const voteToken = async () => {
     setLoading(true);
@@ -144,7 +145,7 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
 
           const signedTransactions = await signAllTransactions(transactions);
           console.log(
-            'User has signed ' + signedTransactions.length + ' transactions'
+            "User has signed " + signedTransactions.length + " transactions"
           );
 
           for (const ta of signedTransactions) {
@@ -161,75 +162,119 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
             });
           }
         }
+        toast({
+          position: "top-right",
+          status: "success",
+          description: "Vote Success",
+          size: "lg",
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      toast({
+        position: "top-right",
+        status: "error",
+        description: error.message,
+        size: "lg",
+      });
     }
     setLoading(false);
   };
   return (
     <>
-      <Drawer isOpen={isOpen} placement='right' onClose={onClose} size={'lg'}>
+      <Drawer
+        isOpen={isOpen}
+        placement="right"
+        onClose={onClose}
+        size={"lg"}
+      >
         <DrawerOverlay />
-        <DrawerContent backgroundColor={bg} paddingX={'24px'} paddingY={'32px'}>
+        <DrawerContent
+          backgroundColor={bg}
+          paddingX={"24px"}
+          paddingY={"32px"}
+        >
           <DrawerBody>
-            <Flex columnGap={'12px'} marginBottom={'22px'}>
+            <Flex
+              columnGap={"12px"}
+              marginBottom={"22px"}
+            >
               <Image
-                src={`${data?.imageUrl}` || '/image/token-image-2.png'}
-                width={'86px'}
-                height={'86px'}
-                objectFit={'cover'}
-                objectPosition={'center'}
+                src={`${data?.imageUrl}` || "/image/token-image-2.png"}
+                width={"86px"}
+                height={"86px"}
+                objectFit={"cover"}
+                objectPosition={"center"}
               />
-              <Flex flexDirection={'column'} rowGap={'4px'} overflow={'hidden'}>
-                <Text fontSize={'24px'} lineHeight={'32px'}>
+              <Flex
+                flexDirection={"column"}
+                rowGap={"4px"}
+                overflow={"hidden"}
+              >
+                <Text
+                  fontSize={"24px"}
+                  lineHeight={"32px"}
+                >
                   {data?.BaseTokenName}
                 </Text>
-                <Text color={text2} fontSize={'16px'} lineHeight={'24px'}>
+                <Text
+                  color={text2}
+                  fontSize={"16px"}
+                  lineHeight={"24px"}
+                >
                   {data?.BaseTokenSymbol}
                 </Text>
                 <Link
                   noOfLines={1}
-                  textOverflow={'ellipsis'}
-                  textDecoration={'underline'}
+                  textOverflow={"ellipsis"}
+                  textDecoration={"underline"}
                   href={`https://solscan.io/token/${data?.BaseTokenAddress}`}
                   isExternal
                   color={text2}
-                  fontSize={'14px'}
-                  lineHeight={'20px'}
+                  fontSize={"14px"}
+                  lineHeight={"20px"}
                   _hover={{ opacity: 0.5 }}
                 >
                   {data?.BaseTokenAddress}
                 </Link>
                 <Flex
-                  marginTop={'8px'}
-                  alignItems={'center'}
-                  columnGap={'12px'}
+                  marginTop={"8px"}
+                  alignItems={"center"}
+                  columnGap={"12px"}
                 >
                   {data?.typesocials_Pair && (
-                    <Link href={data?.urlsocials_Pair} isExternal>
+                    <Link
+                      href={data?.urlsocials_Pair}
+                      isExternal
+                    >
                       <Image
                         src={`/image/social/${data?.typesocials_Pair}.png`}
-                        width={'32px'}
-                        height={'32px'}
+                        width={"32px"}
+                        height={"32px"}
                       />
                     </Link>
                   )}
                   {data?.typesocials && (
-                    <Link href={data?.urlsocials} isExternal>
+                    <Link
+                      href={data?.urlsocials}
+                      isExternal
+                    >
                       <Image
                         src={`/image/social/${data?.typesocials}.png`}
-                        width={'32px'}
-                        height={'32px'}
+                        width={"32px"}
+                        height={"32px"}
                       />
                     </Link>
                   )}
                   {data?.urlweb && (
-                    <Link href={data?.urlweb} isExternal>
+                    <Link
+                      href={data?.urlweb}
+                      isExternal
+                    >
                       <Image
-                        src='/image/social/web.png'
-                        width={'32px'}
-                        height={'32px'}
+                        src="/image/social/web.png"
+                        width={"32px"}
+                        height={"32px"}
                       />
                     </Link>
                   )}
@@ -237,24 +282,24 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
               </Flex>
             </Flex>
             <Flex
-              borderTop={'1px solid'}
+              borderTop={"1px solid"}
               borderTopColor={border}
-              paddingTop={'16px'}
-              flexDirection={'column'}
-              rowGap={'16px'}
+              paddingTop={"16px"}
+              flexDirection={"column"}
+              rowGap={"16px"}
             >
               <Box>
                 {!isMainnet && (
                   <>
                     <Text>Token mint</Text>
                     <Input
-                      placeholder='Enter token mint in devnet to test'
-                      fontSize={'16px'}
+                      placeholder="Enter token mint in devnet to test"
+                      fontSize={"16px"}
                       _placeholder={{
-                        color: 'gray.400',
+                        color: "gray.400",
                       }}
-                      marginBottom={'20px'}
-                      marginTop={'4px'}
+                      marginBottom={"20px"}
+                      marginTop={"4px"}
                       onChange={(e) => setMintAddress(e?.target?.value)}
                     />
                   </>
@@ -262,80 +307,103 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
 
                 <InputGroup>
                   <Input
-                    type='number'
-                    placeholder='Enter amount to send (per like)'
-                    fontSize={'16px'}
+                    type="number"
+                    placeholder="Enter amount to send (per like)"
+                    fontSize={"16px"}
                     _placeholder={{
-                      color: 'gray.400',
+                      color: "gray.400",
                     }}
                     onChange={(e) => setAmount(e?.target?.value)}
                   />
                   <InputRightAddon>
-                    <Flex columnGap={'10px'}>
+                    <Flex columnGap={"10px"}>
                       <Image
-                        src={`${data?.imageUrl}` || '/image/token-image-2.png'}
-                        width='20px'
-                        height={'20px'}
+                        src={`${data?.imageUrl}` || "/image/token-image-2.png"}
+                        width="20px"
+                        height={"20px"}
                       />
-                      <Text fontSize={'16px'} lineHeight={'24px'}>
+                      <Text
+                        fontSize={"16px"}
+                        lineHeight={"24px"}
+                      >
                         {data?.BaseTokenSymbol}
                       </Text>
                     </Flex>
                   </InputRightAddon>
                 </InputGroup>
-                <Text fontSize={'11px'} lineHeight={'19px'} color={text}>
+                <Text
+                  fontSize={"11px"}
+                  lineHeight={"19px"}
+                  color={text}
+                >
                   with per like, you will need to pay ~0.00205 sol to solana
                   network
                 </Text>
               </Box>
               <InputGroup>
                 <Input
-                  type='number'
-                  placeholder='Enter amount to like (min: 10)'
+                  type="number"
+                  placeholder="Enter amount to like (min: 10)"
                   _placeholder={{
-                    color: 'gray.400',
+                    color: "gray.400",
                   }}
                   onChange={(e) => setNumberOfLike(e?.target?.value)}
                 />
                 <InputRightAddon>
-                  <Image src='/image/thumbup.svg' />
+                  <Image src="/image/thumbup.svg" />
                 </InputRightAddon>
               </InputGroup>
               <Tooltip
                 label={errorMsg}
                 isOpen={isTooltipOpen}
-                placement='bottom'
+                placement="bottom"
               >
                 <Button
-                  backgroundColor={'blue.500'}
-                  color={'white'}
-                  _disabled={{ opacity: 0.6, cursor: 'not-allowed' }}
-                  _hover={{ backgroundColor: 'blue.500', opacity: 0.8 }}
+                  backgroundColor={"blue.500"}
+                  color={"white"}
+                  _disabled={{ opacity: 0.6, cursor: "not-allowed" }}
+                  _hover={{ backgroundColor: "blue.500", opacity: 0.8 }}
                   onClick={async () => {
                     await voteToken();
                   }}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   isLoading={loading}
-                  disabled={disabled}
+                  isDisabled={!numberOfLike || !amount || disabled}
                 >
                   LIKE FOR {data?.BaseTokenSymbol}
                 </Button>
               </Tooltip>
 
-              <Text color={text} fontSize={'16px'} lineHeight={'24px'}>
+              <Text
+                color={text}
+                fontSize={"16px"}
+                lineHeight={"24px"}
+              >
                 To LIKE a token, you must have this token in your wallet.
               </Text>
-              <Text color={text} fontSize={'16px'} lineHeight={'24px'}>
+              <Text
+                color={text}
+                fontSize={"16px"}
+                lineHeight={"24px"}
+              >
                 Initiating a transaction that sends tokens to a random address
                 within hotsolanatoken.xyz system effectively generates a LIKE
                 for that token.
               </Text>
-              <Text color={text} fontSize={'16px'} lineHeight={'24px'}>
+              <Text
+                color={text}
+                fontSize={"16px"}
+                lineHeight={"24px"}
+              >
                 With per LIKE, you only need to send a small amount of token,
                 such as 0.0001 (minimum amount required by the token)
               </Text>
-              <Text color={text} fontSize={'16px'} lineHeight={'24px'}>
+              <Text
+                color={text}
+                fontSize={"16px"}
+                lineHeight={"24px"}
+              >
                 A token can receive a maximum of one million LIKEs.
               </Text>
             </Flex>
@@ -346,4 +414,4 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
   );
 }
 
-export default React.memo(HomeDrawer);
+export default HomeDrawer;
