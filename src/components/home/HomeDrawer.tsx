@@ -1,6 +1,5 @@
 'use client';
 import { getRandomWallet } from '@/supabase/getRandomWallet';
-import { getTokensData } from '@/supabase/getTokensData';
 import {
   Drawer,
   DrawerBody,
@@ -16,15 +15,24 @@ import {
   Input,
   Link,
   Box,
+  Tooltip,
+  useToast,
 } from '@chakra-ui/react';
-import {
-  Connection,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from '@solana/web3.js';
-import React, { useContext, useState } from 'react';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
+import React, { useContext, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { ShyftSdk, Network } from '@shyft-to/js';
+import {
+  createAssociatedTokenAccountInstruction,
+  createTransferCheckedInstruction,
+  getAssociatedTokenAddressSync,
+  getMint,
+  getAccount,
+  TOKEN_2022_PROGRAM_ID,
+} from '@solana/spl-token';
+import { AppContext } from '@/provider/AppAdapter';
+import { vote } from '@/function/vote';
+import Error from 'next/error';
 
 interface HomeDrawerProps {
   isOpen: boolean;
@@ -32,17 +40,8 @@ interface HomeDrawerProps {
   data: any;
 }
 
-import {
-  createAssociatedTokenAccountInstruction,
-  createTransferCheckedInstruction,
-  getAssociatedTokenAddressSync,
-  getMint,
-} from '@solana/spl-token';
-import { supabase } from '@/function/supabaseClients';
-import { AppContext } from '@/provider/AppAdapter';
-import { vote } from '@/function/vote';
-
 function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
+  const toast = useToast();
   const { publicKey, signAllTransactions } = useWallet();
   const bg = useColorModeValue('light.bg', 'dark.bg');
   const border = useColorModeValue('light.border', 'dark.border');
@@ -52,21 +51,72 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
   );
   const text2 = useColorModeValue('light.text', 'dark.text');
   const { isMainnet } = useContext(AppContext);
-  const [mintAddress, setMintAddress] = useState('');
-  const [amount, setAmount] = useState('0');
-  const [numberOfLike, setNumberOfLike] = useState('0');
+  const [mintAddress, setMintAddress] = useState(
+    '8P8rSfV6uYkkPwxwPTYXBsvea2ZntzZ1c6M3Y2hwKJ7U'
+  );
+  const [amount, setAmount] = useState('');
+  const [numberOfLike, setNumberOfLike] = useState('');
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('Need connect wallet to vote');
+
+  const connection = new Connection(
+    isMainnet
+      ? process.env.NEXT_PUBLIC_HELIUS_RPC_MAINNET!
+      : process.env.NEXT_PUBLIC_HELIUS_RPC_DEVNET!
+  );
+  const handleMouseEnter = () => {
+    if (disabled) {
+      setIsTooltipOpen(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsTooltipOpen(false);
+  };
+
+  const handleDisable = async () => {
+    if (
+      !publicKey ||
+      !process.env.NEXT_PUBLIC_SHYFT_XAPI_KEY ||
+      !data?.BaseTokenAddress
+    ) {
+      setDisabled(true);
+      return;
+    } else {
+      try {
+        const shyft = new ShyftSdk({
+          apiKey: process.env.NEXT_PUBLIC_SHYFT_XAPI_KEY!,
+          network: isMainnet ? Network.Mainnet : Network.Devnet,
+        });
+        const res = await shyft.wallet.getTokenBalance({
+          wallet: publicKey.toString(),
+          token: isMainnet ? data?.BaseTokenAddress : mintAddress,
+        });
+        console.log(res);
+
+        if (res.balance === 0) {
+          throw new Error({ statusCode: 200, title: '' });
+        }
+
+        setDisabled(false);
+      } catch (error) {
+        setDisabled(true);
+        setErrorMsg('You need to have this token to vote');
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleDisable();
+  }, [publicKey, mintAddress, data?.BaseTokenAddress]);
 
   const voteToken = async () => {
     setLoading(true);
     try {
-      if (publicKey) {
-        const connection = new Connection(
-          isMainnet
-            ? process.env.NEXT_PUBLIC_HELIUS_RPC_MAINNET!
-            : process.env.NEXT_PUBLIC_HELIUS_RPC_DEVNET!
-        );
-
+      if (publicKey && !disabled) {
         const mint = new PublicKey(
           isMainnet ? data?.BaseTokenAddress : mintAddress
         );
@@ -75,24 +125,54 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
         for (let i = 0; i < Number(numberOfLike); i++) {
           const reciever = new PublicKey(await getRandomWallet());
 
+          const shyft = new ShyftSdk({
+            apiKey: process.env.NEXT_PUBLIC_SHYFT_XAPI_KEY!,
+            network: isMainnet ? Network.Mainnet : Network.Devnet,
+          });
+
+          const mintData: any = await shyft.wallet.getTokenBalance({
+            wallet: publicKey.toString(),
+            token: isMainnet ? data?.BaseTokenAddress : mintAddress,
+          });
+
+          const associated_account = new PublicKey(
+            mintData?.associated_account
+          );
+
           const fromAta = getAssociatedTokenAddressSync(mint, publicKey);
-          const toAta = getAssociatedTokenAddressSync(mint, reciever);
-          const mintData = await getMint(connection, mint);
+
+          let is_token_2022 = false;
+
+          console.log(associated_account.toString(), fromAta.toString());
+
+          if (associated_account.toString() !== fromAta.toString()) {
+            is_token_2022 = true;
+          }
+
+          const toAta = getAssociatedTokenAddressSync(
+            mint,
+            reciever,
+            undefined,
+            is_token_2022 ? TOKEN_2022_PROGRAM_ID : undefined
+          );
 
           const createToAtaIns = createAssociatedTokenAccountInstruction(
             publicKey,
             toAta,
             reciever,
-            mint
+            mint,
+            is_token_2022 ? TOKEN_2022_PROGRAM_ID : undefined
           );
 
           const transferIns = createTransferCheckedInstruction(
-            fromAta,
+            is_token_2022 ? associated_account : fromAta,
             mint,
             toAta,
             publicKey,
-            10 ** mintData.decimals * Number(amount),
-            mintData.decimals
+            10 ** mintData?.info?.decimals * Number(amount),
+            mintData?.info?.decimals,
+            [],
+            is_token_2022 ? TOKEN_2022_PROGRAM_ID : undefined
           );
 
           const tx = new Transaction().add(createToAtaIns).add(transferIns);
@@ -116,18 +196,33 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
               skipPreflight: false,
             });
             console.log(txid);
+
+            const res = await connection.confirmTransaction(txid, 'confirmed');
+            console.log(res);
           }
 
-          if (isMainnet) {
-            await vote({
-              mintId: data?.PairId,
-              numberOfLike: Number(numberOfLike),
-            });
-          }
+          // if (isMainnet) {
+          //   await vote({
+          //     mintId: data?.PairId,
+          //     numberOfLike: Number(numberOfLike),
+          //   });
+          // }
         }
+        toast({
+          position: 'top-right',
+          status: 'success',
+          description: 'Vote Success',
+          size: 'lg',
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      toast({
+        position: 'top-right',
+        status: 'error',
+        description: error.message,
+        size: 'lg',
+      });
     }
     setLoading(false);
   };
@@ -265,18 +360,28 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
                   <Image src='/image/thumbup.svg' />
                 </InputRightAddon>
               </InputGroup>
-              <Button
-                backgroundColor={'blue.500'}
-                color={'white'}
-                _hover={{ backgroundColor: 'blue.500', opacity: 0.8 }}
-                onClick={async () => {
-                  console.log('Vote Token');
-                  await voteToken();
-                }}
-                isLoading={loading}
+              <Tooltip
+                label={errorMsg}
+                isOpen={isTooltipOpen}
+                placement='bottom'
               >
-                LIKE FOR {data?.BaseTokenSymbol}
-              </Button>
+                <Button
+                  backgroundColor={'blue.500'}
+                  color={'white'}
+                  _disabled={{ opacity: 0.6, cursor: 'not-allowed' }}
+                  _hover={{ backgroundColor: 'blue.500', opacity: 0.8 }}
+                  onClick={async () => {
+                    await voteToken();
+                  }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  isLoading={loading}
+                  isDisabled={!numberOfLike || !amount || disabled}
+                >
+                  LIKE FOR {data?.BaseTokenSymbol}
+                </Button>
+              </Tooltip>
+
               <Text color={text} fontSize={'16px'} lineHeight={'24px'}>
                 To LIKE a token, you must have this token in your wallet.
               </Text>
@@ -300,4 +405,4 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
   );
 }
 
-export default React.memo(HomeDrawer);
+export default HomeDrawer;
