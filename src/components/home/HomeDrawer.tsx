@@ -25,8 +25,6 @@ import {
 } from '@solana/web3.js';
 import React, { useContext, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Program } from '@coral-xyz/anchor';
-import { IDL, VoteToken } from '@/idl';
 
 interface HomeDrawerProps {
   isOpen: boolean;
