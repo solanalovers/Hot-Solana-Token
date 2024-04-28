@@ -56,7 +56,7 @@ const findOneTokenData = async (searchValue: string) => {
     const { data, error } = await supabase
       .from('token')
       .select('*, vote_result(counts)', { count: 'exact' })
-      .or(typeof searchValue === 'number' ? `PairId.eq.${searchValue}` : `BaseTokenAddress.eq.${searchValue},BaseTokenName.eq.${searchValue},BaseTokenSymbol.eq.${searchValue}`);
+      .or(typeof searchValue === 'number' ? `PairId.ilike.${searchValue}` : `BaseTokenAddress.ilike.${searchValue},BaseTokenName.ilike.${searchValue},BaseTokenSymbol.ilike.${searchValue}`);
 
 
     if (error) {

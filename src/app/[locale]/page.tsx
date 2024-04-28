@@ -39,14 +39,20 @@ export default function Home() {
   };
 
   const handleSearch = async (searchValue: string) => {
-    setLoading(true);
-    const { data: tokenList, count }: any = await findOneTokenData(searchValue);
-    if (tokenList) {
-      setTokenList(tokenList);
-      setTotal(1);
-      setTotalPage(1);
+    if (searchValue) {
+      setLoading(true);
+      const { data: tokenList, count }: any = await findOneTokenData(
+        searchValue
+      );
+      if (tokenList) {
+        setTokenList(tokenList);
+        setTotal(1);
+        setTotalPage(1);
+      }
+      setLoading(false);
+    } else {
+      getTokenList();
     }
-    setLoading(false);
   };
 
   return (
