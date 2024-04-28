@@ -201,12 +201,12 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
             console.log(res);
           }
 
-          // if (isMainnet) {
-          //   await vote({
-          //     mintId: data?.PairId,
-          //     numberOfLike: Number(numberOfLike),
-          //   });
-          // }
+          if (isMainnet) {
+            await vote({
+              mintId: data?.PairId,
+              numberOfLike: Number(numberOfLike),
+            });
+          }
         }
         toast({
           position: 'top-right',
