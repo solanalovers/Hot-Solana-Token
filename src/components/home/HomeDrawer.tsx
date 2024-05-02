@@ -115,6 +115,7 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
 
   const voteToken = async () => {
     setLoading(true);
+    let realNumberOfLike = 0;
     try {
       if (publicKey && !disabled) {
         const mint = new PublicKey(
@@ -123,6 +124,8 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
 
         const transactions: Transaction[] = [];
         for (let i = 0; i < Number(numberOfLike); i++) {
+          console.log('Number: ', i + 1);
+
           const reciever = new PublicKey(await getRandomWallet());
 
           const shyft = new ShyftSdk({
@@ -142,8 +145,6 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
           const fromAta = getAssociatedTokenAddressSync(mint, publicKey);
 
           let is_token_2022 = false;
-
-          console.log(associated_account.toString(), fromAta.toString());
 
           if (associated_account.toString() !== fromAta.toString()) {
             is_token_2022 = true;
@@ -199,6 +200,7 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
 
             const res = await connection.confirmTransaction(txid, 'confirmed');
             console.log(res);
+            realNumberOfLike += 1;
           }
 
           if (isMainnet) {
@@ -216,13 +218,29 @@ function HomeDrawer({ isOpen, onClose, data }: HomeDrawerProps) {
         });
       }
     } catch (error: any) {
-      console.log(error);
-      toast({
-        position: 'top-right',
-        status: 'error',
-        description: error.message,
-        size: 'lg',
-      });
+      if (realNumberOfLike === 0) {
+        console.log(error);
+        toast({
+          position: 'top-right',
+          status: 'error',
+          description: 'Some went wrong',
+          size: 'lg',
+        });
+      } else {
+        if (isMainnet) {
+          await vote({
+            mintId: data?.PairId,
+            numberOfLike: Number(realNumberOfLike),
+          });
+        }
+
+        toast({
+          position: 'top-right',
+          status: 'success',
+          description: `Vote success: ${realNumberOfLike}/${numberOfLike}`,
+          size: 'lg',
+        });
+      }
     }
     setLoading(false);
   };
